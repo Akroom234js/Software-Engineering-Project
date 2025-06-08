@@ -18,8 +18,9 @@ namespace MvcTodoApp.Controllers
         /// <summary>
         /// يعرض القائمة الرئيسية للمهام.
         /// </summary>
-        public IActionResult Index()
+        public IActionResult Index(int? editId = null)
         {
+            ViewBag.EditId = editId;
             return View(tasks);
         }
 
@@ -47,6 +48,20 @@ namespace MvcTodoApp.Controllers
             var task = tasks.FirstOrDefault(t => t.Id == id);
             if (task != null)
                 task.IsComplete = true;
+            return RedirectToAction("Index");
+        }
+
+        /// <summary>
+        /// تعديل عنوان المهمة.
+        /// </summary>
+        [HttpPost]
+        public IActionResult EditTask(int id, string newTitle)
+        {
+            var task = tasks.FirstOrDefault(t => t.Id == id);
+            if (task != null && !string.IsNullOrWhiteSpace(newTitle))
+            {
+                task.Title = newTitle;
+            }
             return RedirectToAction("Index");
         }
     }
